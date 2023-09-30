@@ -1,5 +1,6 @@
+from djoser.serializers import User
 from rest_framework import generics, viewsets
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser, IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -14,18 +15,18 @@ import sqlite3
 #     queryset = Women.objects.all()
 #     serializer_class = WomenSerializer
 
-    # переопределение метода get ( но в urls у router.register нужно будет указать basename='women'
-    # def get_queryset(self):
-    #     pk = self.kwargs.get('pk')
-    #     if not pk:
-    #         return Women.objects.all()[:3]
-    #     return Women.objects.filter(pk=pk)
+# переопределение метода get ( но в urls у router.register нужно будет указать basename='women'
+# def get_queryset(self):
+#     pk = self.kwargs.get('pk')
+#     if not pk:
+#         return Women.objects.all()[:3]
+#     return Women.objects.filter(pk=pk)
 
-    # добавляем новый маршрут
-    # @action(methods=['get'], detail=True)
-    # def category(self, request, pk=None):
-    #     cts = Category.objects.get(pk=pk)
-    #     return Response({'categories': cts.name})
+# добавляем новый маршрут
+# @action(methods=['get'], detail=True)
+# def category(self, request, pk=None):
+#     cts = Category.objects.get(pk=pk)
+#     return Response({'categories': cts.name})
 
 class WomenAPIList(generics.ListCreateAPIView):
     queryset = Women.objects.all()
@@ -36,7 +37,7 @@ class WomenAPIList(generics.ListCreateAPIView):
 class WomenAPIUpdate(generics.RetrieveUpdateAPIView):
     queryset = Women.objects.all()
     serializer_class = WomenSerializer
-    permission_classes = (IsOwnerOrReadOnly,)
+    permission_classes = (IsAuthenticated,)
 
 
 class WomenAPIDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -50,3 +51,4 @@ class WomenAPIDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Women.objects.all()
     serializer_class = WomenSerializer
     permission_classes = (IsAdminOrReadOnly,)
+
